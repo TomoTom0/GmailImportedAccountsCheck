@@ -1,0 +1,21 @@
+{
+    "name": "Gmail Imported Accounts Check",
+    "author":"TomoTomo",
+    "version": "0.1.0.0",
+    "manifest_version": 3,
+    "icons":{
+      "16":"img/icon-16.png",
+      "48":"img/icon-48.png",
+      "128":"img/icon-128.png"
+    },
+    "content_scripts": [{
+      "matches": ["https://mail.google.com/mail/u/*"],
+      "js": ["js/async.min.js","script/functions.js","script/content_script.js"]
+    }],
+    "permissions":["storage"],
+    "options_ui": {
+      "page": "script/options.html",
+      "open_in_tab": true
+    },
+    "description": "add a button to check mails of imported accounts"
+}
