@@ -1,9 +1,9 @@
-"use strict"
+"use strict";
 
 // ----------------------
 //     # functions
 
-function _obtainElmForImportedAccounts() {
+function _obtainElmForImportedAccounts(args={settings: defaultSettings, configInfos: defaultEmptyConfigInfo }) {
     const urlInfo = _parseUrlForGmail();
     if (urlInfo.mode != "settings" ||
         !/^accounts/.test(urlInfo.others)) {
@@ -20,10 +20,12 @@ function _obtainElmForImportedAccounts() {
 
     const spans_arr = Array.from(document.querySelectorAll("div.nH.r4>table>tbody tr:nth-child(5) td.r9>div>table>tbody>tr>td span"));
     if (spans_arr.length < 4) return { divs_imported: divs_imported };
+    
+    const identifierInfo = obtainValidConfig({key:"Identifier", ...args});
     const text_dict = {
-        lastChecked: /前回のメール チェック:|Last checked:/,
-        history: /履歴を表示|View history/,
-        checkMail: /メールを今すぐ確認する|メールの確認中|Check mail now|Checking mail/
+        lastchecked: new RegExp(identifierInfo.lastchecked+"|"+identifierInfo.clicked_lastchecked),
+        history: new RegExp(identifierInfo.history),
+        checkmail: new RegExp(identifierInfo.checkmail+"|"+identifierInfo.clicked_checkmail)
     }
     const elms_valid_tmp = Object.keys(text_dict).map(k_text => {
         const v_text = text_dict[k_text];
@@ -64,10 +66,10 @@ function _clickCheckBtn(_callback = null) {
             // then no accounts is imported
             clearInterval(checkSpan);
             return;
-        } else if (Object.keys(elmsValid).indexOf("checkMail") == -1) return;
+        } else if (Object.keys(elmsValid).indexOf("checkmail") == -1) return;
         clearInterval(checkSpan);
-        const spans_checkMail = elmsValid.checkMail;
-        for (const el of spans_checkMail) {
+        const spans_checkmail = elmsValid.checkmail;
+        for (const el of spans_checkmail) {
             el.click();
         }
     }, 1000);
@@ -127,35 +129,45 @@ function _mailCheckForImportedAccounts() {
 
 //------------------------------------
 //         #  window.onload
-window.onload = () => {
+window.onload = async () => {
     _addButton();
 
-    document.addEventListener("click", function (e) {
+    document.addEventListener("click", async function (e) {
         const el = e.target;
         if (el.children.length > 0 &&
             el.children[0].classList !== null &&
             Array.from(el.children[0].classList).indexOf("btn_CheckExternalMail") != -1) {
+            const items = await getSyncStorage({ settings: defaultSettingsString, configInfos: defaultConfigStrings });
+            const settings = JSON.parse(items.settings);
+            const configInfos = JSON.parse(items.configInfos);            
             console.log("open window");
-            _mailCheckForImportedAccounts();
+            _mailCheckForImportedAccounts({settings: settings, configInfos: configInfos });
         }
     });
-    window.addEventListener("message", function (e) {
+    window.addEventListener("message", async function (e) {
         const content = e.data;
         if (!/^trigger_/.test(content)) return;
+        const items = await getSyncStorage({ settings: defaultSettingsString, configInfos: defaultConfigStrings });
+        const settings = JSON.parse(items.settings);
+        const configInfos = JSON.parse(items.configInfos);
+    
         console.log(content);
         if (/_checkExternalMail/.test(content)) {
             function _closeWindow() {
                 if (window.opener === null) return;
                 // automtically close
+                // read settings
+                if (settings.autoCloseWindow === false) return;
                 setTimeout(() => {
                     window.opener.postMessage("trigger_closeWindow_refreshMail", "*");
                 }, 15 * 1000);
                 const confirmClicked = setInterval(() => {
                     const elmsValid = _obtainElmForImportedAccounts();
-                    if (Object.keys(elmsValid).indexOf("checkMail") == -1) return;
+                    if (Object.keys(elmsValid).indexOf("checkmail") == -1) return;
+                    const identifierInfo = obtainValidConfig({key:"Identifier", settings:settings, configInfos: configInfos});
                     const check_dict = {
-                        lastChecked: /取得したメールは|取得しました|fetched/,
-                        checkMail: /確認中|Checking/
+                        lastchecked: new RegExp(identifierInfo.clicked_lastchecked),
+                        checkmail: new RegExp(identifierInfo.clicked_checkmail)
                     }
                     const judgedElms = Object.keys(check_dict).some(k => {
                         const v_regex = check_dict[k];

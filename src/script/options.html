@@ -9,7 +9,7 @@
     <title>Option</title>
 
     <link rel="stylesheet" href="../css/bootstrap.min.css" type="text/css">
-    <link rel="stylesheet" type="text/css" href="../css/option.css">
+    <link rel="stylesheet" type="text/css" href="../css/options.css">
 
     <style>
         .license {
@@ -40,13 +40,40 @@
             <div class="row">
                 <div class="col-lg-7">
                     <h2 class="CardDBSection">Option page will be coming soon...</h2>
-                    
+                    <div class="well bs-component">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input check_settings" id="check_autoCloseWindow">
+                                    <label class="custom-control-label">Automatically Close Window</label>
+                                </div>
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input check_settings" id="check_changeIdentifierConfig">
+                                    <label class="custom-control-label">Change RegExp Texts to Identify Elements </label>
+                                    <div class="col-lg-10 col-lg-offset-2 changeIdentifierConfig">
+                                        <label class="custom-control-label">Last Checked</label><br>
+                                        <input type="text" placeholder="前回のメール チェック:|Last checked:" style="width:400px" class="inputChangeLastchecked"/><br>
+                                        <label class="custom-control-label">Clicked: Last Checked</label><br>
+                                        <input type="text" placeholder="取得したメールは|取得しました|fetched" style="width:400px" class="inputChangeClicked_lastchecked"/><br>
+                                        <label class="custom-control-label">View History</label><br>
+                                        <input type="text" placeholder="履歴を表示|View history" style="width:400px" class="inputChangeHistory"/><br>
+                                        <label class="custom-control-label">Check Mail</label><br>
+                                        <input type="text" placeholder="メールを今すぐ確認する|Check mail now" style="width:400px" class="inputChangeCheckmail"/><br>
+                                        <label class="custom-control-label">Clicked: Check Mail</label><br>
+                                        <input type="text" placeholder="メールの確認中|Checking mail" style="width:400px" class="inputChangeClicked_checkmail"/><br>
+                                        <button type="button" class="btnSave_changeIdentifierConfig btnSave_changeConfig btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="../js/jquery-3.5.1.min.js"></script>
+    <script src="../script/functions.js"></script>
     <script src="../script/options.js"></script>
 
 </body>

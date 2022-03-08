@@ -18,6 +18,8 @@ After that, the open window will be automatically closed and then mail box will 
 更新ボタン <img src="img/refresh_black_20dp.png" width="15px"> のとなりに追加されているボタン <img src="img/account_circle_googblue_20dp.png" width="15px"> を押すと、新しい一時ウィンドウが立ち上がり、そこでインポートされているアカウントの新着メールの確認が行われます。
 その後、ウィンドウが閉じられてメールボックスが更新されます。
 
+<img src="img/ge_gmailCheck.png" width="60%">
+
 ## Future Work
 
 - add option page where you can manage the texts to identify elements of HTML on Gmail. This enable you to use in any language. (In default, this extension works in English and Japanese.)
