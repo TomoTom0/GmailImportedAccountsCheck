@@ -23,7 +23,7 @@ function _obtainElmForImportedAccounts() {
     const text_dict = {
         lastChecked: /前回のメール チェック:|Last checked:/,
         history: /履歴を表示|View history/,
-        checkMail: /メールを今すぐ確認する|メールの確認中|Check mail now|Checking mail.../
+        checkMail: /メールを今すぐ確認する|メールの確認中|Check mail now|Checking mail/
     }
     const elms_valid_tmp = Object.keys(text_dict).map(k_text => {
         const v_text = text_dict[k_text];
@@ -45,7 +45,7 @@ function _obtainElmForMailBox() {
 
 function _parseUrlForGmail() {
     const url_now = location.href;
-    const gmail_regex = /(https)?:\/\/mail\.google\.com\/mail\/u\/(\d+)\/[^\#\/]*\#([^\/]+)\/?(.*)/
+    const gmail_regex = /(https?):\/\/mail\.google\.com\/mail\/u\/(\d+)\/[^\#\/]*\#([^\/]+)\/?(.*)/
     const url_match_arr = url_now.match(gmail_regex);
     return {
         url: url_now,
@@ -180,7 +180,7 @@ window.onload = () => {
                 ref_button.click();
             }, 500);
         }
-
+        return true;
     }, false);
 
 }
