@@ -169,10 +169,17 @@ window.onload = async () => {
                         lastchecked: new RegExp(identifierInfo.clicked_lastchecked),
                         checkmail: new RegExp(identifierInfo.clicked_checkmail)
                     }
-                    const judgedElms = Object.keys(check_dict).some(k => {
+                    const elmsNum=Object.values(elmsValid)[0].length
+                    const judgedElms = [...Array(elmsNum).keys()].every(ind=>{
+                        const isNew=/0/.test(elmsValid.lastchecked[ind]);
+                        const isChecking = check_dict.checkmail.test(elmsValid.checkmail[ind]);
+                        const isChecked = check_dict.lastchecked.test(elmsValid.lastchecked[ind]);
+                        return (isNew && isChecked) || isChecking;
+                    })
+                    /*const judgedElms = (/0|1/.test()) && Object.keys(check_dict).some(k => {
                         const v_regex = check_dict[k];
                         return elmsValid[k].every(d => v_regex.test(d.innerHTML));
-                    });
+                    });*/
                     if (!judgedElms) return;
                     clearInterval(confirmClicked);
                     window.opener.postMessage("trigger_closeWindow_refreshMail", "*");
